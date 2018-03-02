@@ -29,17 +29,27 @@ const SlickReporter = function(baseReporter, config, options) {
     const terminalColumns = process.stdout.columns
     const lines = wrapLines(terminalColumns, rendered)
 
-    const firstMismatch = lines.findIndex((line, index) => line !== previousLines[index])
-    const linesToUpdate = lines.slice(firstMismatch)
-    const linesToErase = previousLines.length - firstMismatch
+    let firstMismatch = null
+    for (let i = 0; i < Math.max(lines.length, previousLines.length); i++) {
+      if (lines[i] !== previousLines[i]) {
+        firstMismatch = i
+        break
+      }
+    }
 
-    process.stdout.write(eraseLines(linesToErase + 1))
+    if (firstMismatch !== null) {
+      const linesToUpdate = lines.slice(firstMismatch)
 
-    linesToUpdate.forEach(line => {
-      console.log(line)
-    })
+      // + 1 for automatic newline (current cursor line) in terminal
+      const linesToErase = previousLines.length - firstMismatch + 1
 
-    previousLines = lines.concat()
+      process.stdout.write(eraseLines(linesToErase))
+      linesToUpdate.forEach(line => {
+        console.log(line)
+      })
+
+      previousLines = lines.concat()
+    }
   })
 
   process.on('SIGINT', () => {
