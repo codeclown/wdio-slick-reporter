@@ -21,7 +21,7 @@ const SlickReporter = function(baseReporter, config, options) {
       return
     }
 
-    const lines = render(runners, chalk)
+    const lines = render(runners, { colorize: true })
 
     const firstMismatch = lines.findIndex((line, index) => line !== previousLines[index])
     const linesToUpdate = lines.slice(firstMismatch)

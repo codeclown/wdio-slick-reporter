@@ -1,10 +1,8 @@
 const assert = require('assert')
-const chalk = require('chalk')
 const renderer = require('../src/render')
 const SlickReporterState = require('../src/state')
 
-const noColor = new chalk.constructor({level: 0})
-const render = runners => renderer(runners, noColor)
+const render = runners => renderer(runners, { colorize: false })
 
 const sampleRunner = {
   cid: '00-01',
@@ -132,6 +130,62 @@ describe('render', () => {
       '        Foobar',
       '      Stack:',
       '        stack example',
+      ''
+    ])
+  })
+
+  it('renders diff if test failed with an assertion error', () => {
+    state.emit('runner:start', sampleRunner)
+    state.emit('test:start', sampleTest)
+    state.emit('test:fail', Object.assign({}, sampleTest, {
+      err: {
+        message: 'Foobar',
+        expected: 'asd',
+        actual: 'foo'
+      }
+    }))
+
+    assert.deepEqual(render(state.runners), [
+      '',
+      '00-01 ./sample-file.js',
+      '  0 passed  1 failed  0 pending',
+      '',
+      '  ❯ Sample test (currently running)',
+      '',
+      '  Failures:',
+      '    - Sample test',
+      '      Assertion error, diff:',
+      '          -"asd"',
+      '          +"foo"',
+      ''
+    ])
+  })
+
+  it('renders multi-line diff if test failed with an assertion error', () => {
+    state.emit('runner:start', sampleRunner)
+    state.emit('test:start', sampleTest)
+    state.emit('test:fail', Object.assign({}, sampleTest, {
+      err: {
+        message: 'Foobar',
+        expected: { asd: true },
+        actual: { foo: true }
+      }
+    }))
+
+    assert.deepEqual(render(state.runners), [
+      '',
+      '00-01 ./sample-file.js',
+      '  0 passed  1 failed  0 pending',
+      '',
+      '  ❯ Sample test (currently running)',
+      '',
+      '  Failures:',
+      '    - Sample test',
+      '      Assertion error, diff:',
+      '           {',
+      '          -  asd: true',
+      '          +  foo: true',
+      '           }',
       ''
     ])
   })
