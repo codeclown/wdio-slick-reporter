@@ -4,6 +4,7 @@ const util = require('util')
 const { eraseLines } = require('ansi-escapes')
 const SlickReporterState = require('./state')
 const render = require('./render')
+const wrapLines = require('./wrapLines')
 
 const SlickReporter = function(baseReporter, config, options) {
   SlickReporterState.call(this)
@@ -21,15 +22,18 @@ const SlickReporter = function(baseReporter, config, options) {
       return
     }
 
-    const lines = render(runners, { colorize: true })
+    const rendered = render(runners, { colorize: true })
+
+    // If a line naturally wraps to multiple lines in the terminal,
+    // it messes up the ansi-escape eraseLines later
+    const terminalColumns = process.stdout.columns
+    const lines = wrapLines(terminalColumns, rendered)
 
     const firstMismatch = lines.findIndex((line, index) => line !== previousLines[index])
     const linesToUpdate = lines.slice(firstMismatch)
+    const linesToErase = previousLines.length - firstMismatch
 
-    // Don't erase more than this program has printed
-    const linesToErase = Math.min(previousLines.length, linesToUpdate.length + 1)
-
-    process.stdout.write(eraseLines(linesToErase))
+    process.stdout.write(eraseLines(linesToErase + 1))
 
     linesToUpdate.forEach(line => {
       console.log(line)
