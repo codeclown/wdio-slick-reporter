@@ -48,6 +48,8 @@ const render = (runners, { colorize }) => {
     output.push('')
   })
 
+  output.push('')
+
   return output
 }
 

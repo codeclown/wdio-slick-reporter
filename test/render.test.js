@@ -24,7 +24,7 @@ describe('render', () => {
   })
 
   it('renders empty state', () => {
-    assert.deepEqual(render(state.runners), [])
+    assert.deepEqual(render(state.runners), [''])
   })
 
   it('renders a runner', () => {
@@ -34,6 +34,7 @@ describe('render', () => {
       '',
       '00-01 ./sample-file.js',
       '  0 passed  0 failed  0 pending',
+      '',
       ''
     ])
   })
@@ -48,6 +49,7 @@ describe('render', () => {
       '  0 passed  0 failed  0 pending',
       '',
       '  ❯ Sample test (currently running)',
+      '',
       ''
     ])
   })
@@ -63,6 +65,7 @@ describe('render', () => {
       '  1 passed  0 failed  0 pending',
       '',
       '  ❯ Sample test (currently running)',
+      '',
       ''
     ])
   })
@@ -78,6 +81,7 @@ describe('render', () => {
       '  0 passed  0 failed  1 pending',
       '',
       '  ❯ Sample test (currently running)',
+      '',
       ''
     ])
   })
@@ -103,6 +107,7 @@ describe('render', () => {
       '    - Sample test',
       '      Error:',
       '        Foobar',
+      '',
       ''
     ])
   })
@@ -130,6 +135,7 @@ describe('render', () => {
       '        Foobar',
       '      Stack:',
       '        stack example',
+      '',
       ''
     ])
   })
@@ -157,6 +163,7 @@ describe('render', () => {
       '      Assertion error, diff:',
       '          -"asd"',
       '          +"foo"',
+      '',
       ''
     ])
   })
@@ -186,6 +193,7 @@ describe('render', () => {
       '          -  asd: true',
       '          +  foo: true',
       '           }',
+      '',
       ''
     ])
   })
@@ -219,6 +227,7 @@ describe('render', () => {
       '        Foobar',
       '      Stack:',
       '        stack example',
+      '',
       ''
     ])
   })
@@ -246,6 +255,7 @@ describe('render', () => {
       '',
       '00-02 ./another-file.js',
       '  0 passed  0 failed  0 pending',
+      '',
       ''
     ])
   })

@@ -1,8 +1,8 @@
 const chalk = require('chalk')
 const events = require('events')
 const util = require('util')
-const { eraseLines } = require('ansi-escapes')
 const SlickReporterState = require('./state')
+const print = require('./print')
 const render = require('./render')
 const wrapLines = require('./wrapLines')
 
@@ -29,25 +29,10 @@ const SlickReporter = function(baseReporter, config, options) {
     const terminalColumns = process.stdout.columns
     const lines = wrapLines(terminalColumns, rendered)
 
-    let firstMismatch = null
-    for (let i = 0; i < Math.max(lines.length, previousLines.length); i++) {
-      if (lines[i] !== previousLines[i]) {
-        firstMismatch = i
-        break
-      }
-    }
+    const changes = print(previousLines, lines)
 
-    if (firstMismatch !== null) {
-      const linesToUpdate = lines.slice(firstMismatch)
-
-      // + 1 for automatic newline (current cursor line) in terminal
-      const linesToErase = previousLines.length - firstMismatch + 1
-
-      process.stdout.write(eraseLines(linesToErase))
-      linesToUpdate.forEach(line => {
-        console.log(line)
-      })
-
+    if (changes) {
+      process.stdout.write(changes)
       previousLines = lines.concat()
     }
   })
