@@ -24,6 +24,12 @@ module.exports = {
 };
 ```
 
+Hint: you can easily use this reporter in local development, but it is not best suited for e.g. CI-environments. You can easily toggle between reporters in the config-file. Example:
+
+```js
+  reporters: [process.env.CI ? 'spec' : 'slick'],
+```
+
 ## Development
 
 Run tests:
