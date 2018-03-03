@@ -3,7 +3,7 @@ WDIO Slick Reporter
 
 > A slick WebdriverIO reporter intended for local development.
 
-![Demo](https://raw.github.com/codeclown/wdio-slick-reporter/gif/demo.gif)
+![Demo](https://raw.github.com/codeclown/wdio-slick-reporter/master/demo.gif)
 
 Gif above was recorded with ttystudio and is not the best quality example of this reporter in action. [Here's an example project you can just clone and test to see it in action.](https://github.com/codeclown/wdio-slick-reporter-example)
 
