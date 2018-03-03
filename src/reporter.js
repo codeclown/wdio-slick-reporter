@@ -13,6 +13,10 @@ const SlickReporter = function(baseReporter, config, options) {
     console.log(chalk.yellow('Warning: wdio-slick-reporter is meant to be ran when maxInstances: 1'))
   }
 
+  if (config.logLevel !== 'silent') {
+    console.log(chalk.yellow('Warning: wdio-slick-reporter output can break when logLevel !== silent'))
+  }
+
   let printing = true
 
   let previousLines = []

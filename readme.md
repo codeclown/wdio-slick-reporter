@@ -13,13 +13,14 @@ npm install --save-dev wdio-slick-reporter
 
 ## Configuration
 
-Use like any other reporter:
+Use like any other reporter. Setting `logLevel` to `silent` is recommended, otherwise the reporter output will be broken by extraneous logging done by wdio. Example:
 
 ```js
 // wdio.conf.js
 module.exports = {
   // ...
   reporters: ['slick'],
+  logLevel: 'silent',
   // ...
 };
 ```
@@ -28,6 +29,7 @@ Hint: you can easily use this reporter in local development, but it is not best 
 
 ```js
   reporters: [process.env.CI ? 'spec' : 'slick'],
+  logLevel: process.env.CI ? 'debug' : 'silent',
 ```
 
 ## Development
