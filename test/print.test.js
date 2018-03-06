@@ -72,4 +72,13 @@ describe('print', () => {
       'FOOBAR'
     ]), eraseLines(2) + 'FOOBAR')
   })
+
+  it('does not erase more than has been printed', () => {
+    assertEqual(print([
+    ], [
+      'first',
+      'second',
+      'third'
+    ]), 'first\nsecond\nthird')
+  })
 })
