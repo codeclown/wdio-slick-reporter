@@ -6,48 +6,59 @@ const print = require('./print')
 const render = require('./render')
 const wrapLines = require('./wrapLines')
 
-const SlickReporter = function(baseReporter, config, options) {
-  SlickReporterState.call(this)
+const factory = _process => {
+  const SlickReporter = function(baseReporter, config, options) {
+    SlickReporterState.call(this)
 
-  if (config.maxInstances > 1) {
-    console.log(chalk.yellow('Warning: wdio-slick-reporter is meant to be ran when maxInstances: 1'))
-  }
+    this.process = _process
 
-  if (config.logLevel !== 'silent') {
-    console.log(chalk.yellow('Warning: wdio-slick-reporter output can break when logLevel !== silent'))
-  }
-
-  let printing = true
-
-  let previousLines = []
-
-  this.on('change', runners => {
-    if (!printing) {
-      return
+    if (config.maxInstances > 1) {
+      this.process.stdout.write(chalk.yellow('Warning: wdio-slick-reporter is meant to be ran when maxInstances: 1') + '\n')
     }
 
-    const rendered = render(runners, { colorize: true })
-
-    // If a line naturally wraps to multiple lines in the terminal,
-    // it messes up the ansi-escape eraseLines later
-    const terminalColumns = process.stdout.columns
-    const lines = wrapLines(terminalColumns, rendered)
-
-    const changes = print(previousLines, lines)
-
-    if (changes) {
-      process.stdout.write(changes)
-      previousLines = lines.concat()
+    if (config.logLevel !== 'silent') {
+      this.process.stdout.write(chalk.yellow('Warning: wdio-slick-reporter output can break when logLevel !== silent') + '\n')
     }
-  })
 
-  process.on('SIGINT', () => {
-    printing = false
-  })
+    let printing = true
+
+    let previousLines = []
+
+    this.on('change', runners => {
+      if (!printing) {
+        return
+      }
+
+      const rendered = render(runners, { colorize: true })
+
+      // If a line naturally wraps to multiple lines in the terminal,
+      // it messes up the ansi-escape eraseLines later
+      const terminalColumns = this.process.stdout.columns
+      const lines = wrapLines(terminalColumns, rendered)
+
+      const changes = print(previousLines, lines)
+
+      if (changes) {
+        this.process.stdout.write(changes)
+        previousLines = lines.concat()
+      }
+    })
+
+    this.process.on('SIGINT', () => {
+      printing = false
+    })
+  }
+
+  SlickReporter.reporterName = 'SlickReporter';
+
+  util.inherits(SlickReporter, SlickReporterState)
+
+  return SlickReporter
 }
 
-SlickReporter.reporterName = 'SlickReporter';
+const SlickReporter = factory(process)
 
-util.inherits(SlickReporter, SlickReporterState)
+// Allow injecting process for testing purposes
+SlickReporter.factory = factory
 
 exports = module.exports = SlickReporter
