@@ -18,6 +18,7 @@ const SlickReporterState = function() {
         pending: []
       }
     })
+    this.emit('change', runners)
   })
 
   this.on('test:start', test => {
