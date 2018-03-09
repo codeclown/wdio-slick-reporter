@@ -32,8 +32,8 @@ describe('render', () => {
 
     assert.deepEqual(render(state.runners), [
       '',
-      '00-01 ./sample-file.js',
-      '  0 passed  0 failed  0 pending',
+      '00-01  ./sample-file.js',
+      '       0 passed  0 failed  0 pending',
       '',
       ''
     ])
@@ -45,10 +45,10 @@ describe('render', () => {
 
     assert.deepEqual(render(state.runners), [
       '',
-      '00-01 ./sample-file.js',
-      '  0 passed  0 failed  0 pending',
+      '00-01  ./sample-file.js',
+      '       0 passed  0 failed  0 pending',
       '',
-      '  ❯ Sample test (currently running)',
+      '       ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -61,10 +61,10 @@ describe('render', () => {
 
     assert.deepEqual(render(state.runners), [
       '',
-      '00-01 ./sample-file.js',
-      '  1 passed  0 failed  0 pending',
+      '00-01  ./sample-file.js',
+      '       1 passed  0 failed  0 pending',
       '',
-      '  ❯ Sample test (currently running)',
+      '       ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -77,10 +77,10 @@ describe('render', () => {
 
     assert.deepEqual(render(state.runners), [
       '',
-      '00-01 ./sample-file.js',
-      '  0 passed  0 failed  1 pending',
+      '00-01  ./sample-file.js',
+      '       0 passed  0 failed  1 pending',
       '',
-      '  ❯ Sample test (currently running)',
+      '       ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -98,16 +98,16 @@ describe('render', () => {
 
     assert.deepEqual(render(state.runners), [
       '',
-      '00-01 ./sample-file.js',
-      '  0 passed  1 failed  0 pending',
+      '00-01  ./sample-file.js',
+      '       0 passed  1 failed  0 pending',
       '',
-      '  Failures:',
+      '       Failures:',
       '',
-      '    - Sample test',
-      '      Error:',
-      '        Foobar',
+      '         - Sample test',
+      '           Error:',
+      '             Foobar',
       '',
-      '  ❯ Sample test (currently running)',
+      '       ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -125,16 +125,16 @@ describe('render', () => {
 
     assert.deepEqual(render(state.runners), [
       '',
-      '00-01 ./sample-file.js',
-      '  0 passed  1 failed  0 pending',
+      '00-01  ./sample-file.js',
+      '       0 passed  1 failed  0 pending',
       '',
-      '  Failures:',
+      '       Failures:',
       '',
-      '    - Sample test',
-      '      Stack:',
-      '        stack example',
+      '         - Sample test',
+      '           Stack:',
+      '             stack example',
       '',
-      '  ❯ Sample test (currently running)',
+      '       ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -153,17 +153,17 @@ describe('render', () => {
 
     assert.deepEqual(render(state.runners), [
       '',
-      '00-01 ./sample-file.js',
-      '  0 passed  1 failed  0 pending',
+      '00-01  ./sample-file.js',
+      '       0 passed  1 failed  0 pending',
       '',
-      '  Failures:',
+      '       Failures:',
       '',
-      '    - Sample test',
-      '      Assertion error, diff:',
-      '          -"asd"',
-      '          +"foo"',
+      '         - Sample test',
+      '           Assertion error, diff:',
+      '               -"asd"',
+      '               +"foo"',
       '',
-      '  ❯ Sample test (currently running)',
+      '       ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -182,19 +182,19 @@ describe('render', () => {
 
     assert.deepEqual(render(state.runners), [
       '',
-      '00-01 ./sample-file.js',
-      '  0 passed  1 failed  0 pending',
+      '00-01  ./sample-file.js',
+      '       0 passed  1 failed  0 pending',
       '',
-      '  Failures:',
+      '       Failures:',
       '',
-      '    - Sample test',
-      '      Assertion error, diff:',
-      '           {',
-      '          -  asd: true',
-      '          +  foo: true',
-      '           }',
+      '         - Sample test',
+      '           Assertion error, diff:',
+      '                {',
+      '               -  asd: true',
+      '               +  foo: true',
+      '                }',
       '',
-      '  ❯ Sample test (currently running)',
+      '       ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -217,18 +217,18 @@ describe('render', () => {
 
     assert.deepEqual(render(state.runners), [
       '',
-      '00-01 ./sample-file.js',
-      '  0 passed  1 failed  0 pending',
+      '00-01  ./sample-file.js',
+      '       0 passed  1 failed  0 pending',
       '',
-      '  Failures:',
+      '       Failures:',
       '',
-      '    - Sample test',
-      '      Screenshot:',
-      '        ./shots/chrome-error-shot-example.png',
-      '      Error:',
-      '        Foobar',
+      '         - Sample test',
+      '           Screenshot:',
+      '             ./shots/chrome-error-shot-example.png',
+      '           Error:',
+      '             Foobar',
       '',
-      '  ❯ Sample test (currently running)',
+      '       ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -251,13 +251,41 @@ describe('render', () => {
 
     assert.deepEqual(render(state.runners), [
       '',
-      '00-01 ./sample-file.js',
-      '  1 passed  0 failed  0 pending',
+      '00-01  ./sample-file.js',
+      '       1 passed  0 failed  0 pending',
       '',
       '',
       '',
-      '00-02 ./another-file.js',
-      '  0 passed  0 failed  0 pending',
+      '00-02  ./another-file.js',
+      '       0 passed  0 failed  0 pending',
+      '',
+      ''
+    ])
+  })
+
+  it('indents runner output based on runner ID length', () => {
+    const strangeRunner = {
+      cid: '123-456',
+      specs: ['./sample-file.js'],
+      config: {
+        screenshotPath: './shots'
+      }
+    }
+
+    const strangeTest = {
+      cid: '123-456',
+      fullTitle: 'Sample test'
+    }
+
+    state.emit('runner:start', strangeRunner)
+    state.emit('test:start', strangeTest)
+
+    assert.deepEqual(render(state.runners), [
+      '',
+      '123-456  ./sample-file.js',
+      '         0 passed  0 failed  0 pending',
+      '',
+      '         ❯ Sample test (currently running)',
       '',
       ''
     ])

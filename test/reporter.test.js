@@ -113,7 +113,7 @@ describe('reporter', () => {
     assert.equal(writes.length, 1)
 
     const longName = 'Very long test name, longer than process.stdout.columns and should therefore wrap to multiple lines'
-    const wrapped = 'Very long test name, longer than process.stdout.columns and sh\nould therefore wrap'
+    const wrapped = 'Very long test name, longer than process.stdout.columns a\nnd should therefore wrap to multiple lines'
 
     instance.emit('test:start', {
       cid: '00-01',
@@ -125,11 +125,11 @@ describe('reporter', () => {
 
     // Currently output looks like this:
     // ---
-    //   00-01 ./sample-file.js
-    //     0 passed  0 failed  0 pending
+    //   00-01  ./sample-file.js
+    //          0 passed  0 failed  0 pending
     //
-    //     ❯ Very long test name, longer than process.stdout.columns and sh
-    //   ould therefore wrap to multiple lines (currently running)
+    //          ❯ Very long test name, longer than process.stdout.columns a
+    //   nd should therefore wrap to multiple lines (currently running)
     //
     //
     // ---
@@ -141,16 +141,15 @@ describe('reporter', () => {
 
     // Now output should look like this:
     // ---
-    //   00-01 ./sample-file.js
-    //     1 passed  0 failed  0 pending
+    //   00-01  ./sample-file.js
+    //          1 passed  0 failed  0 pending
     //
-    //     ❯ Very long test name, longer than process.stdout.columns and sh
-    //   ould therefore wrap to multiple lines (currently running)
+    //          ❯ Very long test name, longer than process.stdout.columns a
+    //   nd should therefore wrap to multiple lines (currently running)
     //
     //
     // ---
-
     assert.equal(writes.length, 3)
-    assert.equal(writes[2].startsWith(eraseLines(6) + '  \u001b[32m1 passed'), true, 'erased correct amount of lines')
+    assert.equal(writes[2].startsWith(eraseLines(6) + '       \u001b[32m1 passed'), true, 'erased correct amount of lines')
   })
 })

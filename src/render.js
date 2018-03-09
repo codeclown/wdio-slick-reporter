@@ -9,47 +9,52 @@ const render = (runners, { colorize }) => {
   const output = []
 
   runners.forEach(runner => {
-    output.push('')
-    output.push(colors.bold(runner.cid) + ' ' + runner.specs.join(' '))
-    output.push('  ' +
+    const runnerOutput = []
+    runnerOutput.push(
       colors[runner.tests.passed.length ? 'green' : 'gray'](`${runner.tests.passed.length} passed`) + '  ' +
       colors[runner.tests.failed.length ? 'red' : 'gray'](`${runner.tests.failed.length} failed`) + '  ' +
       colors[runner.tests.pending.length ? 'cyan' : 'gray'](`${runner.tests.pending.length} pending`)
     )
     if (runner.tests.failed.length) {
-      output.push('')
-      output.push(colors.red.bold('  Failures:'))
+      runnerOutput.push('')
+      runnerOutput.push(colors.red.bold('Failures:'))
       runner.tests.failed.forEach(test => {
-        output.push('')
-        output.push(colors.gray('    - ') + test.fullTitle)
+        runnerOutput.push('')
+        runnerOutput.push(colors.gray('  - ') + test.fullTitle)
         if (test.screenshotFilename) {
-          output.push(colors.gray('      Screenshot:'))
-          output.push(colors.gray(`        ${runner.screenshotPath}/${test.screenshotFilename}`))
+          runnerOutput.push(colors.gray('    Screenshot:'))
+          runnerOutput.push(colors.gray(`      ${runner.screenshotPath}/${test.screenshotFilename}`))
         }
         if (test.err.hasOwnProperty('expected') && test.err.hasOwnProperty('actual')) {
           const diff = jsonDiff.diffString(test.err.expected, test.err.actual, { color: colorize })
           const diffLines = diff.split('\n').slice(0, -1) // Ignore last (empty) line
-          output.push(colors.gray('      Assertion error, diff:'))
+          runnerOutput.push(colors.gray('    Assertion error, diff:'))
           diffLines.forEach(line => {
-            output.push(colors.gray('          ') + line)
+            runnerOutput.push(colors.gray('        ') + line)
           })
         } else if (test.err.stack) {
-          output.push(colors.gray('      Stack:'))
+          runnerOutput.push(colors.gray('    Stack:'))
           test.err.stack.split("\n").forEach(line => {
-            output.push(colors.gray('        ' + line))
+            runnerOutput.push(colors.gray('      ' + line))
           })
         } else {
-          output.push(colors.gray('      Error:'))
-          output.push(colors.gray('        ' + test.err.message))
+          runnerOutput.push(colors.gray('    Error:'))
+          runnerOutput.push(colors.gray('      ' + test.err.message))
         }
       })
     }
     if (runner.currentTest) {
-      output.push('')
-      output.push(colors.gray('  ❯ ') + colors.bold(runner.currentTest) + colors.gray(' (currently running)'))
+      runnerOutput.push('')
+      runnerOutput.push(colors.gray('❯ ') + colors.bold(runner.currentTest) + colors.gray(' (currently running)'))
     }
+    runnerOutput.push('')
+    runnerOutput.push('')
     output.push('')
-    output.push('')
+    output.push(colors.bold(runner.cid) + '  ' + runner.specs.join(' '))
+    const paddingLeft = ' '.repeat(runner.cid.length + 2)
+    runnerOutput.forEach(line => {
+      output.push(line ? paddingLeft + line : '')
+    })
   })
 
   return output
