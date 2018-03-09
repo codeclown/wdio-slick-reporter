@@ -16,16 +16,16 @@ const render = (runners, { colorize }) => {
       colors[runner.tests.failed.length ? 'red' : 'gray'](`${runner.tests.failed.length} failed`) + '  ' +
       colors[runner.tests.pending.length ? 'cyan' : 'gray'](`${runner.tests.pending.length} pending`)
     )
-    if (runner.currentTest) {
-      output.push('')
-      output.push(colors.gray('  ❯ ') + colors.bold(runner.currentTest) + colors.gray(' (currently running)'))
-    }
     if (runner.tests.failed.length) {
       output.push('')
-      output.push(colors.red('  Failures:'))
+      output.push(colors.red.bold('  Failures:'))
       runner.tests.failed.forEach(test => {
-        const screenshot = test.screenshotFilename ? colors.gray(`  →  ${runner.screenshotPath}/${test.screenshotFilename}`) : ''
-        output.push(colors.gray('    - ') + test.fullTitle + screenshot)
+        output.push('')
+        output.push(colors.gray('    - ') + test.fullTitle)
+        if (test.screenshotFilename) {
+          output.push(colors.gray('      Screenshot:'))
+          output.push(colors.gray(`        ${runner.screenshotPath}/${test.screenshotFilename}`))
+        }
         if (test.err.hasOwnProperty('expected') && test.err.hasOwnProperty('actual')) {
           const diff = jsonDiff.diffString(test.err.expected, test.err.actual, { color: colorize })
           const diffLines = diff.split('\n').slice(0, -1) // Ignore last (empty) line
@@ -44,10 +44,13 @@ const render = (runners, { colorize }) => {
         }
       })
     }
+    if (runner.currentTest) {
+      output.push('')
+      output.push(colors.gray('  ❯ ') + colors.bold(runner.currentTest) + colors.gray(' (currently running)'))
+    }
+    output.push('')
     output.push('')
   })
-
-  output.push('')
 
   return output
 }

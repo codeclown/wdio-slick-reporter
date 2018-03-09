@@ -24,7 +24,7 @@ describe('render', () => {
   })
 
   it('renders empty state', () => {
-    assert.deepEqual(render(state.runners), [''])
+    assert.deepEqual(render(state.runners), [])
   })
 
   it('renders a runner', () => {
@@ -101,12 +101,13 @@ describe('render', () => {
       '00-01 ./sample-file.js',
       '  0 passed  1 failed  0 pending',
       '',
-      '  ❯ Sample test (currently running)',
-      '',
       '  Failures:',
+      '',
       '    - Sample test',
       '      Error:',
       '        Foobar',
+      '',
+      '  ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -127,12 +128,13 @@ describe('render', () => {
       '00-01 ./sample-file.js',
       '  0 passed  1 failed  0 pending',
       '',
-      '  ❯ Sample test (currently running)',
-      '',
       '  Failures:',
+      '',
       '    - Sample test',
       '      Stack:',
       '        stack example',
+      '',
+      '  ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -154,13 +156,14 @@ describe('render', () => {
       '00-01 ./sample-file.js',
       '  0 passed  1 failed  0 pending',
       '',
-      '  ❯ Sample test (currently running)',
-      '',
       '  Failures:',
+      '',
       '    - Sample test',
       '      Assertion error, diff:',
       '          -"asd"',
       '          +"foo"',
+      '',
+      '  ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -182,15 +185,16 @@ describe('render', () => {
       '00-01 ./sample-file.js',
       '  0 passed  1 failed  0 pending',
       '',
-      '  ❯ Sample test (currently running)',
-      '',
       '  Failures:',
+      '',
       '    - Sample test',
       '      Assertion error, diff:',
       '           {',
       '          -  asd: true',
       '          +  foo: true',
       '           }',
+      '',
+      '  ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -216,12 +220,15 @@ describe('render', () => {
       '00-01 ./sample-file.js',
       '  0 passed  1 failed  0 pending',
       '',
-      '  ❯ Sample test (currently running)',
-      '',
       '  Failures:',
-      '    - Sample test  →  ./shots/chrome-error-shot-example.png',
+      '',
+      '    - Sample test',
+      '      Screenshot:',
+      '        ./shots/chrome-error-shot-example.png',
       '      Error:',
       '        Foobar',
+      '',
+      '  ❯ Sample test (currently running)',
       '',
       ''
     ])
@@ -246,6 +253,7 @@ describe('render', () => {
       '',
       '00-01 ./sample-file.js',
       '  1 passed  0 failed  0 pending',
+      '',
       '',
       '',
       '00-02 ./another-file.js',
