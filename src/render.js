@@ -33,15 +33,14 @@ const render = (runners, { colorize }) => {
           diffLines.forEach(line => {
             output.push(colors.gray('          ') + line)
           })
-        } else {
-          output.push(colors.gray('      Error:'))
-          output.push(colors.gray('        ' + test.err.message))
-        }
-        if (test.err.stack) {
+        } else if (test.err.stack) {
           output.push(colors.gray('      Stack:'))
           test.err.stack.split("\n").forEach(line => {
             output.push(colors.gray('        ' + line))
           })
+        } else {
+          output.push(colors.gray('      Error:'))
+          output.push(colors.gray('        ' + test.err.message))
         }
       })
     }

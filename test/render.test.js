@@ -131,8 +131,6 @@ describe('render', () => {
       '',
       '  Failures:',
       '    - Sample test',
-      '      Error:',
-      '        Foobar',
       '      Stack:',
       '        stack example',
       '',
@@ -209,8 +207,7 @@ describe('render', () => {
     state.emit('runner:screenshot', exampleShot)
     state.emit('test:fail', Object.assign({}, sampleTest, {
       err: {
-        message: 'Foobar',
-        stack: 'stack example'
+        message: 'Foobar'
       }
     }))
 
@@ -225,8 +222,6 @@ describe('render', () => {
       '    - Sample test  →  ./shots/chrome-error-shot-example.png',
       '      Error:',
       '        Foobar',
-      '      Stack:',
-      '        stack example',
       '',
       ''
     ])
